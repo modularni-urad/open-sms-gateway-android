@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Open SMS Gateway node</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="setup">Set up…</string>
+    <string name="service_not_running">Service is not running, press Start to start it</string>
+    <string name="sms_sent">SMS sent</string>
+    <string name="service_is_running">Service is running</string>
+    <string name="follow_log">Follow log</string>
+    <string name="pref_url">url</string>
+    <string name="server_wss_url">Server Websocket URL</string>
+    <string name="pref_phonenum">phonenum</string>
+    <string name="msisdn">MSISDN/identifier</string>
+    <string name="server_settings">Server settings</string>
+    <string name="nothing_set"><![CDATA[<nothing set>]]></string>
+    <string name="pref_phonenum_default">123456</string>
+    <string name="settings">Settings</string>
+    <string name="error_phonenum_empty">Identifier must not be empty!</string>
+    <string name="error_wss_url">Specified URL is not valid Websocket URL.\nMust use ws:// or wss:// scheme.</string>
+    <string name="error_invalid_msisdn">Identifier must be a valid 9 digits number!</string>
+</resources>
+

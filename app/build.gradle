@@ -1,0 +1,54 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "cz.sazel.android.opensmsgw"
+        minSdkVersion 14
+        targetSdkVersion 28
+        versionCode 1
+        versionName "0.1"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            buildConfigField "java.lang.Boolean", "LOGCAT", "true"
+        }
+
+        release {
+            minifyEnabled false
+            buildConfigField "java.lang.Boolean", "LOGCAT", "false"
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+ext {
+    jetpack = "1.1.0"
+    coroutines="1.3.3"
+}
+
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.fragment:fragment-ktx:$jetpack"
+    implementation "androidx.appcompat:appcompat:$jetpack"
+    implementation "androidx.core:core-ktx:$jetpack"
+    implementation "androidx.recyclerview:recyclerview:$jetpack"
+    implementation "android.arch.lifecycle:extensions:$jetpack"
+    implementation "android.arch.lifecycle:viewmodel:$jetpack"
+    implementation "androidx.preference:preference:$jetpack"
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines"
+    implementation 'com.tinder.scarlet:scarlet:0.1.9'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}

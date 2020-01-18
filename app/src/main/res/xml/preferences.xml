@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="settings"
+        android:title="@string/server_settings">
+        <EditTextPreference
+            android:key="@string/pref_url"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/nothing_set"
+            android:title="@string/server_wss_url" />
+        <EditTextPreference
+            android:defaultValue="@string/pref_phonenum_default"
+            android:key="@string/pref_phonenum"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/pref_phonenum_default"
+            android:title="@string/msisdn" />
+    </PreferenceCategory>
+</PreferenceScreen>
