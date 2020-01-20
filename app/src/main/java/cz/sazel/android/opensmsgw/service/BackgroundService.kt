@@ -259,6 +259,7 @@ class BackgroundService : Service(), CoroutineScope {
         val ACTION_SMS_DELIVERED = "${BackgroundService::class.java.name}.ACTION_SMS_DELIVERED"
 
 
+        @Suppress("DEPRECATION")
         fun isServiceRunning(ctx: Context): Boolean {
             val manager = ctx.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
             for (service in manager.getRunningServices(Int.MAX_VALUE)) {

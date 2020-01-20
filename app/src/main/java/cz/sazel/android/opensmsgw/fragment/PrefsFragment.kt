@@ -31,7 +31,7 @@ class PrefsFragment : PreferenceFragmentCompat(),
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
 
-        val prefs = preferenceScreen.sharedPreferences
+        //val prefs = preferenceScreen.sharedPreferences
 
         with(preferenceScreen) {
             prefWsURL = findPreference(getString(R.string.pref_url))!!
