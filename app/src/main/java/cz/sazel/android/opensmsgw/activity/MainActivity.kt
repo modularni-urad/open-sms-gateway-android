@@ -143,7 +143,7 @@ class MainActivity : FragmentActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         log.d(TAG, "returned from PrefsActivity")
         if (requestCode == REQUEST_PREFERENCES && resultCode == RESULT_OK) {
-            backgroundService?.reload()
+            backgroundService?.reconnect()
         } else if (requestCode == REQUEST_PERMISSION_SEND_SMS && resultCode == RESULT_OK) {
             log.d(TAG, "sms permissions granted")
         }

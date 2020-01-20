@@ -141,15 +141,18 @@ class BackgroundService : Service(), CoroutineScope {
             while (true) {
 
                 onUpdateCounters?.invoke(counters)
-                delay(1000)
+                delay(Constants.COUNTER_UPDATE_DELAY)
             }
         }
     }
 
-    fun reload() {
-        log.i(TAG, "Configuration changed, reloading")
+    fun reconnect() {
+        log.v(TAG, "Reconnecting")
         disconnect()
-        connect()
+        launch(Dispatchers.Main) {
+            delay(Constants.RECONNECT_DELAY)
+            connect()
+        }
     }
 
     /**
@@ -206,6 +209,7 @@ class BackgroundService : Service(), CoroutineScope {
                     disconnecting = false
                 }?.on(Socket.EVENT_CONNECT_ERROR) {
                     log.e(TAG, "connection error")
+                    reconnect()
                 }?.on(Socket.EVENT_CONNECT_TIMEOUT) {
                     log.e(TAG, "connection timeout")
                 }?.on(Socket.EVENT_ERROR) {

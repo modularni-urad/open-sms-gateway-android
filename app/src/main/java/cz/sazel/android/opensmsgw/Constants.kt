@@ -11,4 +11,7 @@ object Constants {
     const val SMSREQUEST_PARAM_MSG = "mess"
     const val LOGROTATE_LINES = 100
     const val LOG_ITEM_DATEFORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+
+    const val RECONNECT_DELAY=5000L
+    const val COUNTER_UPDATE_DELAY=1000L
 }
