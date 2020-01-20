@@ -4,6 +4,7 @@ import android.util.Log
 import cz.sazel.android.opensmsgw.Constants
 import cz.sazel.android.opensmsgw.model.LogItem
 import cz.sazel.android.opensmsgw.model.LogLevel.*
+import java.util.*
 
 /**
  * Logger that logs to the Logcat and
@@ -13,7 +14,7 @@ class Logger {
     /**
      * In-memory log storage of the logger.
      */
-    private var internalLog = mutableListOf<LogItem>()
+    private var internalLog = Collections.synchronizedList(mutableListOf<LogItem>())
 
     /**
      * Current contents of the log.
@@ -47,35 +48,35 @@ class Logger {
     }
 
 
-
     /**
      * Logs error (6) message.
      */
     fun e(tag: String, msg: String) =
-        logcat { Log.e(tag, msg) }.localLog(LogItem(ERROR,System.currentTimeMillis(),tag,msg))
+        logcat { Log.e(tag, msg) }.localLog(LogItem(ERROR, System.currentTimeMillis(), tag, msg))
 
-    /**
+    /** m
      * Logs warning (5) message.
      */
     fun w(tag: String, msg: String) =
-        logcat { Log.i(tag, msg) }.localLog(LogItem(WARNING,System.currentTimeMillis(),tag,msg))
+        logcat { Log.i(tag, msg) }.localLog(LogItem(WARNING, System.currentTimeMillis(), tag, msg))
 
     /**
      * Logs info (4) message.
      */
     fun i(tag: String, msg: String) =
-        logcat { Log.i(tag, msg) }.localLog(LogItem(INFO,System.currentTimeMillis(),tag,msg))
+        logcat { Log.i(tag, msg) }.localLog(LogItem(INFO, System.currentTimeMillis(), tag, msg))
 
 
     /**
      * Logs debug (3) message.
      */
     fun d(tag: String, msg: String) =
-        logcat { Log.d(tag, msg) }.localLog(LogItem(DEBUG,System.currentTimeMillis(),tag,msg))
+        logcat { Log.d(tag, msg) }.localLog(LogItem(DEBUG, System.currentTimeMillis(), tag, msg))
 
     /**
      * Logs verbose (2) message.
      */
     fun v(tag: String, msg: String) =
-        logcat { Log.v(tag, msg) }.localLog(LogItem(VERBOSE,System.currentTimeMillis(),tag,msg))
+        logcat { Log.v(tag, msg) }.localLog(LogItem(VERBOSE, System.currentTimeMillis(), tag, msg))
+
 }

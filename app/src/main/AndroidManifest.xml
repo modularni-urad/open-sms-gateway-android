@@ -5,6 +5,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.MODIFY_PHONE_STATE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
         android:name="cz.sazel.android.opensmsgw.App"
@@ -15,6 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="n">
         <activity
@@ -29,13 +32,16 @@
         <activity
             android:name=".activity.PrefsActivity"
             android:parentActivityName=".activity.MainActivity"
-            android:title="@string/settings"
-            android:theme="@style/AppTheme.NoToolbar">
+            android:theme="@style/AppTheme.NoToolbar"
+            android:title="@string/settings">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
 
+        <receiver
+            android:name=".receiver.SmsResultBroadcastReceiver"
+            android:exported="false" />
         <service
             android:name="cz.sazel.android.opensmsgw.service.BackgroundService"
             android:exported="false"
