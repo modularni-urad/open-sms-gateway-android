@@ -10,12 +10,6 @@ jobs:
       - checkout
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "hello_lib/build.gradle" }}-{{ checksum  "hello_android_app/build.gradle" }}-{{ checksum  "hello_js_browser_app/build.gradle" }}-{{ checksum  "hello_js_node_app/build.gradle" }}-{{ checksum  "hello_jvm_app/build.gradle" }}
-      #      - run:
-      #         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
-      #         command: sudo chmod +x ./gradlew
-#      - run:
-#          name: Install Android NDK
-#          command: source ./.circleci/circleCiEnvironmentSetup.sh && getAndroidNDK
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
@@ -34,5 +28,5 @@ jobs:
       - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: app/build/reports
           destination: reports
-            - store_test_results: # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
-                path: app/build/test-results
+      - store_test_results: # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+          path: app/build/test-results
