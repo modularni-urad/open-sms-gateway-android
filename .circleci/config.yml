@@ -3,27 +3,21 @@ jobs:
   build:
     working_directory: ~/code
     docker:
-      - image: circleci/android:api-28-alpha
+      - image: circleci/android:api-28
     environment:
       JVM_OPTS: -Xmx3200m
     steps:
       - checkout
       - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "hello_lib/build.gradle" }}-{{ checksum  "hello_android_app/build.gradle" }}-{{ checksum  "hello_js_browser_app/build.gradle" }}-{{ checksum  "hello_js_node_app/build.gradle" }}-{{ checksum  "hello_jvm_app/build.gradle" }}
-      #      - run:
-      #         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
-      #         command: sudo chmod +x ./gradlew
-#      - run:
-#          name: Install Android NDK
-#          command: source ./.circleci/circleCiEnvironmentSetup.sh && getAndroidNDK
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "opensmsgw/build.gradle" }}
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
       - save_cache:
           paths:
             - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - run: echo $ENCODED_KEYSTORE | base64 --decode >> ${HOME}/code/keystore.jks
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "opensmsgw/build.gradle" }}
+      - run: echo "$ENCODED_KEYSTORE" | base64 --decode >> ${HOME}/code/keystore.jks
       - run: echo 'export KEYSTORE=${HOME}/code/keystore.jks' >> $BASH_ENV
       - run:
           name: Run Tests
@@ -31,8 +25,14 @@ jobs:
       - run:
           name: Build
           command: ./gradlew build
+      - run:
+          name: Make APK
+          command: ./gradlew packageRelease
       - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
-          path: app/build/reports
+          path: opensmsgw/build/reports
           destination: reports
-            - store_test_results: # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
-                path: app/build/test-results
+      - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+          path: opensmsgw/build/outputs/apk/release
+          destination: apk
+      - store_test_results: # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+          path: opensmsgw/build/test-results
