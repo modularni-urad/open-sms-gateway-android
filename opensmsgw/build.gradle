@@ -6,13 +6,23 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 28
+    def versionStr = "0.2.0"
+
     defaultConfig {
         applicationId "cz.sazel.android.opensmsgw"
         minSdkVersion 14
         targetSdkVersion 28
         versionCode 2
-        versionName "0.2"
+        versionName "$versionStr"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            outputFileName = new File(
+                    output.outputFile.name,
+                    output.outputFile.name.replace(".apk", "-${versionStr}.apk"))
+        }
     }
 
     signingConfigs {
