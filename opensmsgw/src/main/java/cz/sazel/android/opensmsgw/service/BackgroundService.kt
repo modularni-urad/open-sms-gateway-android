@@ -14,8 +14,7 @@ import cz.sazel.android.opensmsgw.R
 import cz.sazel.android.opensmsgw.activity.MainActivity
 import cz.sazel.android.opensmsgw.sms.SmsSender
 import cz.sazel.android.opensmsgw.util.getResultCodeText
-import io.socket.client.IO
-import io.socket.client.Socket
+import io.socket.engineio.client.Socket
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.net.URISyntaxException
@@ -166,17 +165,21 @@ class BackgroundService : Service(), CoroutineScope {
             val uri = Uri.parse(uriWithoutNum).buildUpon().apply {
                 appendQueryParameter(Constants.SUBSCRIBE_QUERY_NUM, num)
             }.build()
-            if (uri.scheme == "http") log.w(
+            if (uri.scheme in arrayOf("http", "ws")) log.w(
                 TAG,
                 "unencrypted insecure connection, don't use in production!"
             )
-            socket = IO.socket(uri.toString(), IO.Options().apply { reconnection = false })
+            socket = Socket(uri.toString(), object : Socket.Options() {
+                init {
+                    transports = arrayOf("websocket")
+                }
+            })
             socket?.on(
-                Socket.EVENT_CONNECT
+                Socket.EVENT_OPEN
             ) {
-                log.v(TAG, "connected to <$uri>")
+                log.v(TAG, "engine.io socket open to <$uri>")
             }
-                ?.on("send") {
+                ?.on(Socket.EVENT_MESSAGE) {
                     try {
                         val obj = JSONObject(it[0] as String)
                         val to = obj.getString(Constants.SMSREQUEST_PARAM_NUM)
@@ -185,38 +188,38 @@ class BackgroundService : Service(), CoroutineScope {
                         val smsId = smsSender!!.sendMessage(to, msg)
                         if (smsId > 0) {
                             log.d(TAG, "sms send_result ok")
-                            socket?.emit("send_result", "ok")
+                            socket?.send("ok")
                         } else {
                             log.d(TAG, "sms send_result error")
-                            socket?.emit("send_result", "error")
+                            socket?.send("error")
                         }
                     } catch (e: Exception) {
                         log.e(TAG, "bad: ${e.message}")
                         counters.smsSentFailed++
                         try {
-                            socket?.emit("send_result", "error")
+                            socket?.send("error")
                         } catch (e: Exception) {
                             log.e(TAG, "bad: ${e.message}")
                         }
                     }
-                }?.on(Socket.EVENT_DISCONNECT) {
-                    log.d(TAG, "disconnected from <$uriWithoutNum>")
+                }?.on(Socket.EVENT_CLOSE) {
+                    log.d(TAG, "engine.io closed <$uriWithoutNum>")
                     if (!disconnecting) {
                         log.w(TAG, "unexpected disconnect, reconnecting")
                         socket = null
                         connect()
                     }
                     disconnecting = false
-                }?.on(Socket.EVENT_CONNECT_ERROR) {
-                    log.e(TAG, "connection error")
-                    reconnect()
-                }?.on(Socket.EVENT_CONNECT_TIMEOUT) {
-                    log.e(TAG, "connection timeout")
                 }?.on(Socket.EVENT_ERROR) {
-                    log.e(TAG, "error $it")
+                    log.e(
+                        TAG,
+                        "error ${it.filterIsInstance<Exception>().fold<Exception, String>(
+                            "",
+                            { acc, e -> "$acc${e.cause?.message} \n" })}"
+                    )
                 }
-            log.v(TAG, "connecting to <$uri>")
-            socket?.connect()
+            log.v(TAG, "opening connection to <$uri>")
+            socket?.open()
             log.d(TAG, "after connect, starting service loop")
 
         } catch (e: URISyntaxException) {
@@ -231,12 +234,13 @@ class BackgroundService : Service(), CoroutineScope {
             )
         } catch (e: Exception) {
             log.e(TAG, "Error <${e.message}>")
+            if (socket != null) socket?.close()
         }
     }
 
     private fun disconnect() {
         disconnecting = true
-        if (socket?.connected() == true) socket?.disconnect()
+        if (socket != null) socket?.close()
         socket = null
     }
 
