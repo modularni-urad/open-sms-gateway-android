@@ -16,7 +16,7 @@
     <string name="pref_phonenum_default">123456</string>
     <string name="settings">Settings</string>
     <string name="error_phonenum_empty">Identifier must not be empty!</string>
-    <string name="error_wss_url">Specified URL is not valid.\nMust use http:// or https:// scheme.</string>
+    <string name="error_wss_url">Specified URL is not valid.\nMust use ws:// or wss:// scheme.</string>
     <string name="error_invalid_msisdn">Identifier must be a valid 9 digits number!</string>
 </resources>
 

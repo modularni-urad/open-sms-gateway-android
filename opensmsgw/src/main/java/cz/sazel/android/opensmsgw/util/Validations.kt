@@ -11,7 +11,7 @@ import java.util.*
 fun isValidWsUrl(url: String?): Boolean {
     return try {
         val uri = Uri.parse(url)
-        (uri?.scheme?.toLowerCase(Locale.getDefault()) in listOf("http", "https")) //currently supports only this
+        (uri?.scheme?.toLowerCase(Locale.getDefault()) in listOf("http","https","ws", "wss")) //currently supports only this
     } catch (e: Exception) {
         false
     }
